@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html ng-app="myModule">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+    <script>
+
+
+        var app = angular.module("myModule", []);
+        app.service('operations', function ($http) {
+        this.getUsers = function () {                 return $http.get("http://azureprojectdemo.azurewebsites.net/api/user");             } 
+        this.post = function (User) {                 var request = $http({                     method: "post",                     url: "http://azureprojectdemo.azurewebsites.net/api/User/create",                     data:  User                 });                 return request;             }
+                 });
+
+        app.controller('myController', function ($scope, operations) {
+                         loadRecords();              function loadRecords() {                 var promiseGet = operations.getUsers();                  promiseGet.then(function (response) { $scope.users = response.data },                   function (errorResponse) {                       $scope.error = "Error while retrieving user data";                   });             }
+
+
+
+            $scope.add = function () {                 var data = {                     firstName: $scope.firstName,                     lastName: $scope.lastName,                     age: $scope.age,                     emailId: $scope.emailId,                 };                 var promisePost = operations.post(data);                     promisePost.then(function (response) {                         loadRecords();                         clearData();                     }, function (errorResponse) {                         $scope.error = "Error while adding user data";                     });             }; 
+            function clearData(){
+                $scope.firstName = "";
+                $scope.lastName = "";
+                $scope.age = "";
+                $scope.emailId = "";
+            }
+
+        });
+
+    </script>
+    <style>
+    table, tr, td, th {
+      border: 1px solid #ccc;
+      padding: 5px;
+      margin: 5px;
+      }
+      th{
+      background-color: darkgray;
+      }
+    </style> 
+    <body ng-controller="myController">
+        
+        <h1>Create User</h1>
+        <label>First Name:</label>
+        <input type="text" name="txtfname" ng-model="firstName"/>
+        <label>Last Name:</label>
+        <input type="text" name="txtlname" ng-model="lastName"/>
+        <label>Age:</label>
+        <input type="text" name="txtage" ng-model="age"/>
+        <label>Email:</label>
+        <input type="text" name="txtemail" ng-model="emailId"/>
+        <input type="button" value="Add User" ng-click="add()"></input>
+        <h1>Users List</h1>
+        <table >
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody >
+                
+                <tr ng-repeat="user in users">
+                    <td> {{ user.id }} </td>
+                    <td> {{ user.firstName }} </td>
+                    <td> {{ user.lastName }} </td>
+                    <td> {{ user.age }} </td>
+                    <td> {{ user.emailId }} </td>
+                </tr>
+            </tbody>
+        </table>
+      
+        
+    </body>
+</html>
