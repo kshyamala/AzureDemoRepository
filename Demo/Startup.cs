@@ -25,11 +25,11 @@ namespace Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            //services.AddCors();
+
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "WEB API Demo", Version = "v1" });
             });
         }
 
@@ -43,7 +43,7 @@ namespace Demo
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            //app.UseCors(builder => builder.AllowAnyOrigin());
+
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -51,7 +51,7 @@ namespace Demo
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WEB API Demo V1");
             });
             app.UseMvc();
         }

@@ -2,11 +2,13 @@
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using AzureProjectDemo.Models;
+
 namespace AzureProjectDemo.Manager
 {
     public class DBManager
     {
         private string _connectionstring = string.Empty;
+
         public DBManager()
         {
             var connectionstr = new SqlConnectionStringBuilder();
@@ -16,6 +18,7 @@ namespace AzureProjectDemo.Manager
             connectionstr.InitialCatalog = "AzureDemoDB";
             _connectionstring = connectionstr.ConnectionString;
         }
+
         public User GetUser(int id)
         {
 
@@ -100,29 +103,6 @@ namespace AzureProjectDemo.Manager
 
                 using (var command = new SqlCommand(tsql, sqlconnection))
                 {
-                    command.Parameters.AddWithValue("@FirstName", user.FirstName);
-                    command.Parameters.AddWithValue("@LastName", user.LastName);
-                    command.Parameters.AddWithValue("@Age", user.Age);
-                    command.Parameters.AddWithValue("@EmailID", user.EmailId);
-                    numRowsAffected = command.ExecuteNonQuery();
-                }
-            }
-            return numRowsAffected;
-        }
-
-
-        public int UpdateUser(User user)
-        {
-            int numRowsAffected = 0;
-
-            using (var sqlconnection = new SqlConnection(_connectionstring))
-            {
-                sqlconnection.Open();
-                string tsql = "UPDATE [tbl_UserDetails] SET FirstName = @FirstName, LastName = @LastName, Age = @Age, EmailID = @EmailID WHERE ID = @ID;";
-
-                using (var command = new SqlCommand(tsql, sqlconnection))
-                {
-                    command.Parameters.AddWithValue("@ID", user.ID);
                     command.Parameters.AddWithValue("@FirstName", user.FirstName);
                     command.Parameters.AddWithValue("@LastName", user.LastName);
                     command.Parameters.AddWithValue("@Age", user.Age);
