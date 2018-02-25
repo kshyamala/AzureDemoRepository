@@ -53,13 +53,18 @@ namespace AzureProjectDemo.Controllers
         [HttpPost("Create")]
         public IActionResult CreateUser([FromBody]User user)
         {
-            DBManager dbManager = new DBManager();
-
-            if (dbManager.CreateUser(user) == 1)
-                //return CreatedAtRoute("GetUser",user.ID, user);
-                return new ObjectResult("User created successfully");
+            if (!IsUserRecordValid(user))
+                return BadRequest();
             else
-                return StatusCode(500);
+            {
+                DBManager dbManager = new DBManager();
+
+                if (dbManager.CreateUser(user) == 1)
+                    //return CreatedAtRoute("GetUser",user.ID, user);
+                    return new ObjectResult("User created successfully");
+                else
+                    return StatusCode(500);
+            }
         }
 
         // POST api/user/update
