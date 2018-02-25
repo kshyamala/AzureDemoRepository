@@ -10,17 +10,17 @@
 
 
         var app = angular.module("myModule", []);
+
         app.service('operations', function ($http) {
         this.getUsers = function () {                 return $http.get("http://azureprojectdemo.azurewebsites.net/api/user");             } 
         this.post = function (User) {                 var request = $http({                     method: "post",                     url: "http://azureprojectdemo.azurewebsites.net/api/User/create",                     data:  User                 });                 return request;             }
                  });
 
         app.controller('myController', function ($scope, operations) {
-                         loadRecords();              function loadRecords() {                 var promiseGet = operations.getUsers();                  promiseGet.then(function (response) { $scope.users = response.data },                   function (errorResponse) {                       $scope.error = "Error while retrieving user data";                   });             }
+                         loadRecords();              function loadRecords() {                 var promiseGet = operations.getUsers();                  promiseGet.then(function (response) { $scope.users = response.data },                   function (errorResponse) {                       alert("Error while retrieving user data. Response Code: " + errorResponse.status);                 });             }
 
-
-
-            $scope.add = function () {                 var data = {                     firstName: $scope.firstName,                     lastName: $scope.lastName,                     age: $scope.age,                     emailId: $scope.emailId,                 };                 var promisePost = operations.post(data);                     promisePost.then(function (response) {                         loadRecords();                         clearData();                     }, function (errorResponse) {                         $scope.error = "Error while adding user data";                     });             }; 
+            $scope.add = function () {                 var data = {                         firstName: $scope.firstName,                         lastName: $scope.lastName,                         age: $scope.age,                         emailId: $scope.emailId,                 };                 var promisePost = operations.post(data);                     promisePost.then(function (response) {
+                        alert(response.data);                         loadRecords();                         clearData();                     }, function (errorResponse) {                         alert("Error while adding user data. Response Code: " + errorResponse.status);                     });             }; 
             function clearData(){
                 $scope.firstName = "";
                 $scope.lastName = "";
@@ -32,14 +32,18 @@
 
     </script>
     <style>
-    table, tr, td, th {
-      border: 1px solid #ccc;
-      padding: 5px;
-      margin: 5px;
-      }
-      th{
-      background-color: darkgray;
-      }
+        table {
+            border-collapse: collapse;
+        }
+        table, tr, td, th {
+          border: 1px solid #ccc;
+          padding: 5px;
+          margin: 5px;
+        }
+        th{
+          background-color: darkgray;
+        }
+
     </style> 
     <body ng-controller="myController">
         
@@ -53,6 +57,8 @@
         <label>Email:</label>
         <input type="text" name="txtemail" ng-model="emailId"/>
         <input type="button" value="Add User" ng-click="add()"></input>
+        <br/>
+
         <h1>Users List</h1>
         <table >
             <thead>
